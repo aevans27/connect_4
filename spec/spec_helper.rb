@@ -1,2 +1,3 @@
 require './lib/board'
-require 'RSpec'
+require 'rspec'
+require './lib/column'
