@@ -3,4 +3,8 @@ class Column
   def initialize
     @tokens = []
   end
+
+  def place_token(token)
+    @tokens << token
+  end
 end
