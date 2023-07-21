@@ -17,6 +17,14 @@ RSpec.describe Column do
       @column.place_token("x")
       
       expect(@column.tokens).to eq(["x"])
+
+      @column.place_token("x")
+      @column.place_token("x")
+      @column.place_token("x")
+      @column.place_token("x")
+      @column.place_token("x")
+
+      expect(@column.place_token("x")).to eq("Please choose a valid column")
     end
   end
 

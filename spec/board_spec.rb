@@ -68,4 +68,19 @@ RSpec.describe Board do
       @board.update_board
     end
   end
+
+  describe "#valid_placement" do
+    it "is the column selected valid" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+
+      expect(@board.valid_placement?("c")).to eq(true)
+      expect(@board.valid_placement?("z")).to eq(false)
+    end
+  end
 end
