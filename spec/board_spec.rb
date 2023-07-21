@@ -30,6 +30,25 @@ RSpec.describe Board do
       @board.add_column(@g)
 
       expect(@board.columns).to eq([@a, @b, @c, @d, @e, @f, @g])
+
+      #@board.update_board
+    end
+  end
+
+  describe "#add_pieces" do
+    it "can add pieces to board" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+
+      expect(@board.columns).to eq([@a, @b, @c, @d, @e, @f, @g])
+
+      @board.welcome
+      @board.update_board
     end
   end
 end
