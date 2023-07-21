@@ -2,6 +2,7 @@ class Board
   attr_reader :columns
   def initialize
     @columns = []
+    @allow_letters = ["a", "b", "c", "d", "e", "f", "g"]
   end
 
   def add_column(column)
@@ -34,6 +35,22 @@ class Board
       row_string = ""
       max_index -= 1
     end
+  end
+
+  def valid_placement?(input)
+    if "abcdefg".match?(input.downcase)
+      selected_index = @allow_letters.find_index(input.downcase)
+      if @columns[selected_index].is_column_full?
+        p "Seclected column is full. Please choose another column"
+        false
+      else
+        true
+      end
+    else
+      p "Input is invalid. Please choose a column from A-G"
+      false
+    end
+
   end
 
 end
