@@ -19,4 +19,17 @@ RSpec.describe Column do
       expect(@column.tokens).to eq(["x"])
     end
   end
+
+  describe '#column_is_full' do
+    it 'check if column is full' do
+      @column.tokens << "x"
+      @column.tokens << "x"
+      @column.tokens << "x"
+      @column.tokens << "x"
+      @column.tokens << "x"
+      @column.tokens << "x"
+
+      expect(@column.is_column_full?).to eq(true)
+    end
+  end
 end
