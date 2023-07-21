@@ -12,4 +12,10 @@ RSpec.describe Player do
       expect(@player1.piece).to eq("x")
     end
   end
+
+  describe "#computer" do
+    it "knows if it is a computer" do
+      expect(@player1.computer?).to be false
+    end
+  end
 end
