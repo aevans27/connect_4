@@ -51,4 +51,21 @@ RSpec.describe Board do
       @board.update_board
     end
   end
+
+  describe "#update_board" do
+    it "can place pieces" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+
+      @a.place_token("X")
+
+      expect(@a.tokens).to eq(["X"])
+      @board.update_board
+    end
+  end
 end

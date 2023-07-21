@@ -22,6 +22,12 @@ class Board
       @columns.each do |column|
         if column.tokens.empty?
           row_string.concat(".")
+        else
+          if column.tokens[max_index] != nil
+            row_string.concat(column.tokens[max_index])
+          else
+            row_string.concat(".")
+          end
         end
       end
       puts row_string
