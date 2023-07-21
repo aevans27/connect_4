@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Player do
   before(:each) do
-    @player1 = Player.new("x")
-    @player2 = Player.new("o")
+    @player1 = Player.new("x", false)
+    @player2 = Player.new("o", true)
   end
 
   describe "#initialize" do
