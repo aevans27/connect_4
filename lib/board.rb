@@ -75,10 +75,62 @@ class Board
   end
 
   def horizontal_win?
-    false
+    did_win = false
+    max_index = 5
+    row_string = ""
+    while max_index >= 0 do
+      @columns.each do |column|
+        if column.tokens.empty?
+          row_string.concat(".")
+        else
+          if column.tokens[max_index] != nil
+            row_string.concat(column.tokens[max_index])
+          else
+            row_string.concat(".")
+          end
+        end
+      end
+      if row_string.downcase.include?("xxxx"||"oooo")
+        did_win = true
+        break
+      end
+      row_string = ""
+      max_index -= 1
+    end
+    did_win
   end
 
   def diagonal_win?
-    false
+    did_win = false
+    valid_columns = []
+    valid_columns << @columns[0..3]
+    require 'pry';binding.pry
+    starting_columns = valid_columns.flatten
+    # starting_columns == [[@a, @b, @c, @d]]
+    starting_index = 0  
+    current_index = 0
+    diag_string = ""
+    while starting_index < 3 do
+      current_index = starting_index
+      @columns.each do |column|
+        if column.tokens.empty?
+          diag_string.concat(".")
+        else
+          if column.tokens[current_index] != nil
+            diag_string.concat(column.tokens[current_index])
+          else
+            diag_string.concat(".")
+          end
+        end
+        current_index += 1
+      end
+      if diag_string.downcase.include?("xxxx"||"oooo")
+        did_win = true
+        break
+      end
+      diag_string = ""
+      starting_index += 1
+    end
+    did_win
   end
 end

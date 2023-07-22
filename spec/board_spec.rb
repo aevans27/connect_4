@@ -110,6 +110,14 @@ RSpec.describe Board do
       
       expect(@board.check_for_win?).to eq(true)
       expect(@board.vertical_win?).to eq(true)
+
+      
+      @b.place_token("X")
+      @c.place_token("X")
+      @d.place_token("X")
+
+      expect(@board.check_for_win?).to eq(true)
+      expect(@board.horizontal_win?).to eq(true)
       
     end
   end
