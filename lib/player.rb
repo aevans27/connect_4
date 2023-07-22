@@ -5,7 +5,7 @@ class Player
     @is_computer = is_computer
   end
 
-  def computer?
-    @computer
+  def is_computer?
+    @is_computer
   end
 end

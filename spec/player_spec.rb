@@ -13,9 +13,9 @@ RSpec.describe Player do
     end
   end
 
-  describe "#computer" do
+  describe "#is_computer" do
     it "knows if it is a computer" do
-      expect(@player1.computer?).to be false
+      expect(@player1.is_computer?).to be false
     end
   end
 end

@@ -1,5 +1,5 @@
 class Board
-  attr_reader :columns
+  attr_reader :columns, :allow_letters
   def initialize
     @columns = []
     @allow_letters = ["a", "b", "c", "d", "e", "f", "g"]

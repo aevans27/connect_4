@@ -32,9 +32,16 @@ RSpec.describe Gameplay do
     end
   end
 
+  describe "#play" do
+    it "can play a game" do
+      @game.play
+    end
+  end
+
   describe "#turn" do
     it "can accept player column selection" do
-      
+      @game.start_game
+      @game.turn
     end
   end
 

@@ -1,5 +1,6 @@
 class Gameplay
-  attr_reader :player1, :player2
+  attr_reader :player1, :player2, :board
+  attr_accessor :turn_counter
 
   def initialize
     @player1 = Player.new("x", false)
@@ -20,6 +21,17 @@ class Gameplay
     p "Enter p to play. Enter q to quit."
   end
 
+  def play
+    loop do
+      if @turn_counter == 42
+        p "The game has ended in a draw."
+        break
+      elsif @turn_counter < 42
+        turn
+      end
+    end
+  end
+
   def turn
     if @turn_counter == 0 || @turn_counter.even?
       player = @player1
@@ -28,15 +40,16 @@ class Gameplay
     end
     
     loop do
-      if player.computer?
+      if player.is_computer?
         input = @board.allow_letters.sample
       else
+        p "Please select a column to place your piece."
         input = gets.chomp.downcase
       end
     
       if @board.valid_placement?(input)
-        selected_index = @allow_letters.find_index(input.downcase)
-        @board.columns[selected_index].place_token(player.token)
+        selected_index = @board.allow_letters.find_index(input.downcase)
+        @board.columns[selected_index].place_token(player.piece)
         @board.update_board
         break
       end
