@@ -100,37 +100,60 @@ class Board
     did_win
   end
 
+  def diagonals(grid)
+    (0..grid.size-4).map do |i|
+      (0..grid.size-1-i).map { |j| grid[i+j][j] }
+    end.concat((1..grid.first.size-4).map do |j|
+      (0..grid.size-j-1).map { |i| grid[i][j+i] }
+    end)
+  end
+
   def diagonal_win?
-    did_win = false
-    valid_columns = []
-    valid_columns << @columns[0..3]
-    require 'pry';binding.pry
-    starting_columns = valid_columns.flatten
-    # starting_columns == [[@a, @b, @c, @d]]
-    starting_index = 0  
-    current_index = 0
-    diag_string = ""
-    while starting_index < 3 do
-      current_index = starting_index
-      @columns.each do |column|
-        if column.tokens.empty?
-          diag_string.concat(".")
-        else
-          if column.tokens[current_index] != nil
-            diag_string.concat(column.tokens[current_index])
-          else
-            diag_string.concat(".")
-          end
-        end
-        current_index += 1
-      end
-      if diag_string.downcase.include?("xxxx"||"oooo")
-        did_win = true
-        break
-      end
-      diag_string = ""
-      starting_index += 1
-    end
-    did_win
+    puts diagonals(@columns)
   end
 end
+
+# starting_column = @columns
+# starting_column == [@a, @b .. @g]
+# starting_column.shift!
+# starting_column == [@b, @c .. @g]
+
+# def diagonal_win?
+#   did_win = false
+#   # valid_columns = []
+#   # valid_columns << @columns[0..3]
+#   starting_column = @columns
+#   starting_index = 0  
+#   current_index = 0
+#   diag_string = ""
+#   while starting_index < 3 do
+#     current_index = starting_index
+#     starting_column.each do |column|
+#       if column.tokens.empty?
+#         diag_string.concat(".")
+#       else
+#         if column.tokens[current_index] != nil
+#           diag_string.concat(column.tokens[current_index])
+#         else
+#           diag_string.concat(".")
+#         end
+#       end
+#       current_index += 1
+#     end
+#     if diag_string.downcase.include?("xxxx"||"oooo")
+#       did_win = true
+#       break
+#     end
+#     diag_string = ""
+#     starting_index += 1
+#   end
+#   if did_win
+#     break
+#   elsif starting_column[0] == @d
+#     break
+#   else
+#     starting_column.shift!
+#     starting_index = 0
+#   end
+# end
+# end
