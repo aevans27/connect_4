@@ -52,4 +52,33 @@ class Board
     end
   end
 
+  def check_for_win?
+    if vertical_win? || horizontal_win? || diagonal_win?
+      true
+    else
+      false
+    end
+  end
+
+  def vertical_win?
+    did_win = false
+    @columns.find do |column|
+      if !column.tokens.empty?
+        if column.tokens.join.downcase.include?("xxxx"||"oooo")
+          # require 'pry';binding.pry
+          did_win = true
+          break
+        end
+      end
+    end
+    did_win
+  end
+
+  def horizontal_win?
+    false
+  end
+
+  def diagonal_win?
+    false
+  end
 end
