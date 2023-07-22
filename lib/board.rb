@@ -1,5 +1,5 @@
 class Board
-  attr_reader :columns
+  attr_reader :columns, :allow_letters
   def initialize
     @columns = []
     @allow_letters = ["a", "b", "c", "d", "e", "f", "g"]
@@ -41,7 +41,7 @@ class Board
     if "abcdefg".match?(input.downcase)
       selected_index = @allow_letters.find_index(input.downcase)
       if @columns[selected_index].is_column_full?
-        p "Seclected column is full. Please choose another column"
+        p "Selected column is full. Please choose another column"
         false
       else
         true
@@ -50,7 +50,6 @@ class Board
       p "Input is invalid. Please choose a column from A-G"
       false
     end
-
   end
 
 end

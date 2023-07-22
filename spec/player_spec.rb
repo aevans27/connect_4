@@ -2,8 +2,8 @@ require 'spec_helper'
 
 RSpec.describe Player do
   before(:each) do
-    @player1 = Player.new("x")
-    @player2 = Player.new("o")
+    @player1 = Player.new("x", false)
+    @player2 = Player.new("o", true)
   end
 
   describe "#initialize" do
@@ -13,9 +13,9 @@ RSpec.describe Player do
     end
   end
 
-  describe "#computer" do
+  describe "#is_computer" do
     it "knows if it is a computer" do
-      expect(@player1.computer?).to be false
+      expect(@player1.is_computer?).to be false
     end
   end
 end
