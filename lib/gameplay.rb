@@ -1,6 +1,6 @@
 class Gameplay
   attr_reader :player1, :player2, :board
-  attr_accessor :turn_counter
+  attr_accessor :turn_counter, :current_player
 
   def initialize
     @player1 = Player.new("x", false)
@@ -26,6 +26,9 @@ class Gameplay
       if @turn_counter == 42
         p "The game has ended in a draw."
         break
+      elsif @board.check_for_win?
+        p "#{@current_player} has won!"
+        break
       elsif @turn_counter < 42
         turn
       end
@@ -34,13 +37,13 @@ class Gameplay
 
   def turn
     if @turn_counter == 0 || @turn_counter.even?
-      player = @player1
+      @current_player = @player1
     else
-      player = @player2
+      @current_player = @player2
     end
     
     loop do
-      if player.is_computer?
+      if @current_player.is_computer?
         input = @board.allow_letters.sample
       else
         p "Please select a column to place your piece."
@@ -49,7 +52,7 @@ class Gameplay
     
       if @board.valid_placement?(input)
         selected_index = @board.allow_letters.find_index(input.downcase)
-        @board.columns[selected_index].place_token(player.piece)
+        @board.columns[selected_index].place_token(@current_player.piece)
         @board.update_board
         break
       end

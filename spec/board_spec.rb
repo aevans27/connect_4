@@ -83,4 +83,42 @@ RSpec.describe Board do
       expect(@board.valid_placement?("z")).to eq(false)
     end
   end
+
+  describe "#check_for_win" do
+    it "check for conbinations for win" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+
+      
+
+      # expect(@a.tokens).to eq(["X"])
+      @board.update_board
+      expect(@board.check_for_win?).to eq(false)
+      expect(@board.vertical_win?).to eq(false)
+      expect(@board.horizontal_win?).to eq(false)
+      expect(@board.diagonal_win?).to eq(false)
+
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      
+      expect(@board.check_for_win?).to eq(true)
+      expect(@board.vertical_win?).to eq(true)
+
+      
+      @b.place_token("X")
+      @c.place_token("X")
+      @d.place_token("X")
+
+      expect(@board.check_for_win?).to eq(true)
+      expect(@board.horizontal_win?).to eq(true)
+      
+    end
+  end
 end
