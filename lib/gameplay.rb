@@ -6,28 +6,38 @@ class Gameplay
     @player1 = Player.new("x", false)
     @player2 = Player.new("o", true)
     @board = Board.new
-    @board.add_column(@a = Column.new)
-    @board.add_column(@b = Column.new)
-    @board.add_column(@c = Column.new)
-    @board.add_column(@d = Column.new)
-    @board.add_column(@e = Column.new)
-    @board.add_column(@f = Column.new)
-    @board.add_column(@g = Column.new)
     @turn_counter = 0
   end
 
   def start_game
-    p "Welcome to CONNECT FOUR"
-    p "Enter p to play. Enter q to quit."
+    loop do
+      p "Welcome to CONNECT FOUR"
+      p "Enter p to play. Enter q to quit."
+      input = gets.chomp.downcase
+      if input == "p"
+        @turn_counter = 0
+        @board.columns.clear
+        @board.build_board
+        @board.update_board
+        play
+        break
+      elsif input == "q"
+        exit
+      else
+        p "Please choose a vailid input."
+      end
+    end
   end
 
   def play
     loop do
       if @turn_counter == 42
         p "The game has ended in a draw."
+        start_game
         break
       elsif @board.check_for_win?
         p "#{@current_player} has won!"
+        start_game
         break
       elsif @turn_counter < 42
         turn
@@ -36,10 +46,10 @@ class Gameplay
   end
 
   def turn
-    if @turn_counter == 0 || @turn_counter.even?
-      @current_player = @player1
-    else
+    if @turn_counter.odd?
       @current_player = @player2
+    else
+      @current_player = @player1
     end
     
     loop do
