@@ -11,10 +11,20 @@ class Board
     @columns << column
   end
 
-  def welcome
-    puts "Welcome to connect 4!
-    Player 1 is X and Player 2 is O
-    Player 1 goes first!"
+  # def welcome
+  #   puts "Welcome to connect 4!
+  #   Player 1 is X and Player 2 is O
+  #   Player 1 goes first!"
+  # end
+
+  def build_board
+    add_column(@a = Column.new)
+    add_column(@b = Column.new)
+    add_column(@c = Column.new)
+    add_column(@d = Column.new)
+    add_column(@e = Column.new)
+    add_column(@f = Column.new)
+    add_column(@g = Column.new)
   end
 
   def update_board
@@ -43,7 +53,9 @@ class Board
     if "abcdefg".match?(input.downcase)
       selected_index = @allow_letters.find_index(input.downcase)
       if @columns[selected_index].is_column_full?
-        p "Selected column is full. Please choose another column"
+        if !player.is_computer?
+          p "Selected column is full. Please choose another column"
+        end
         false
       else
         true
@@ -66,7 +78,7 @@ class Board
     did_win = false
     @columns.find do |column|
       if !column.tokens.empty?
-        if column.tokens.join.downcase.include?("xxxx"||"oooo")
+        if column.tokens.join.downcase.include?("xxxx") || column.tokens.join.downcase.include?("oooo")
           # require 'pry';binding.pry
           did_win = true
           break
@@ -92,7 +104,7 @@ class Board
           end
         end
       end
-      if row_string.downcase.include?("xxxx"||"oooo")
+      if row_string.downcase.include?("xxxx") || row_string.downcase.include?("oooo")
         did_win = true
         break
       end
@@ -110,43 +122,39 @@ class Board
       end
     end.concat((1..grid.first.tokens.size-2).map do |j|
       (0..grid.size-j-1).map do |i|
-         grid[i].tokens[j+i] 
+        grid[i].tokens[j+i] 
       end
     end)
   end
 
   def diagonals_no_tokens(grid)
     (0..grid.size-4).map do |i|
-      (0..grid.size-1-i).map do |j| 
-        #require 'pry';binding.pry
-        grid[i+j][j] 
+      (0..grid.size-1-i).map do |j|
+        grid[i+j][j]
       end
     end.concat((1..grid.first.size-2).map do |j|
       (0..grid.size-j-1).map do |i|
-         grid[i][j+i] 
+        grid[i][j+i]
       end
     end)
   end
 
   def rotate_board_90(grid)
     ncols = grid.first.tokens.size
-    #require 'pry';binding.pry
     grid.each_index.with_object([]) do |i,a|
       a << ncols.times.map do |j|
-        # require 'pry';binding.pry
-         grid[j].tokens[ncols-1-i] 
+        grid[j].tokens[ncols-1-i]
       end
     end
   end
 
   def antediagonal_win?
     @temp_array.clear
-    p @temp_array
-    p @columns
+    # p @temp_array
+    # p @columns
     @temp_array = Marshal.load(Marshal.dump(@columns))
-    # require 'pry';binding.pry
     @temp_array.each do |col|
-      p col.tokens
+      # p col.tokens
       while col.tokens.count < 7 do
         col.place_token(".")
       end
@@ -158,11 +166,10 @@ class Board
 
   def diagonal_win?
     @temp_array.clear
-    p @temp_array
+    # p @temp_array
     @temp_array = Marshal.load(Marshal.dump(@columns))
-    # require 'pry';binding.pry
     @temp_array.each do |col|
-      p col.tokens
+      # p col.tokens
       while col.tokens.count < 6 do
         col.place_token(".")
       end
@@ -174,55 +181,10 @@ class Board
   def four_in_a_row_by_row(arr)
     arr.each do |row|
       a = row.each_cons(4).find do |a|
-         a.uniq.size == 1 && a.first != '.' 
+        a.uniq.size == 1 && a.first != '.'
       end
-      return true unless a.nil?        
+      return true unless a.nil?  
     end
     false
   end
 end
-
-# starting_column = @columns
-# starting_column == [@a, @b .. @g]
-# starting_column.shift!
-# starting_column == [@b, @c .. @g]
-
-# def diagonal_win?
-#   did_win = false
-#   # valid_columns = []
-#   # valid_columns << @columns[0..3]
-#   starting_column = @columns
-#   starting_index = 0  
-#   current_index = 0
-#   diag_string = ""
-#   while starting_index < 3 do
-#     current_index = starting_index
-#     starting_column.each do |column|
-#       if column.tokens.empty?
-#         diag_string.concat(".")
-#       else
-#         if column.tokens[current_index] != nil
-#           diag_string.concat(column.tokens[current_index])
-#         else
-#           diag_string.concat(".")
-#         end
-#       end
-#       current_index += 1
-#     end
-#     if diag_string.downcase.include?("xxxx"||"oooo")
-#       did_win = true
-#       break
-#     end
-#     diag_string = ""
-#     starting_index += 1
-#   end
-#   if did_win
-#     break
-#   elsif starting_column[0] == @d
-#     break
-#   else
-#     starting_column.shift!
-#     starting_index = 0
-#   end
-# end
-# end
