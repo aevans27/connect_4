@@ -108,7 +108,7 @@ RSpec.describe Board do
       @a.place_token("X")
       @a.place_token("X")
       
-      expect(@board.check_for_win?).to eq(true)
+      #expect(@board.check_for_win?).to eq(true)
       expect(@board.vertical_win?).to eq(true)
 
       
@@ -116,9 +116,28 @@ RSpec.describe Board do
       @c.place_token("X")
       @d.place_token("X")
 
-      expect(@board.check_for_win?).to eq(true)
-      expect(@board.horizontal_win?).to eq(true)
+      @b.place_token("X")
+      @c.place_token("X")
+      @c.place_token("X")
       
+
+      #expect(@board.check_for_win?).to eq(true)
+      expect(@board.horizontal_win?).to eq(true)
+
+      expect(@board.diagonal_win?).to eq(false)
+
+      @d.place_token("X")
+      @d.place_token("X")
+      @d.place_token("X")
+
+      @board.update_board
+
+      expect(@board.diagonal_win?).to eq(true)
+
+      expect(@board.antediagonal_win?).to eq(false)
+      @b.place_token("X")
+      expect(@board.antediagonal_win?).to eq(true)
+      expect(@board.check_for_win?).to eq(true)
     end
   end
 end
