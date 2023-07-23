@@ -1,8 +1,10 @@
 class Board
   attr_reader :columns, :allow_letters
+  attr_accessor :temp_array
   def initialize
     @columns = []
     @allow_letters = ["a", "b", "c", "d", "e", "f", "g"]
+    @temp_array = []
   end
 
   def add_column(column)
@@ -53,7 +55,7 @@ class Board
   end
 
   def check_for_win?
-    if vertical_win? || horizontal_win? || diagonal_win?
+    if vertical_win? || horizontal_win? || diagonal_win? || antediagonal_win?
       true
     else
       false
@@ -102,14 +104,81 @@ class Board
 
   def diagonals(grid)
     (0..grid.size-4).map do |i|
-      (0..grid.size-1-i).map { |j| grid[i+j][j] }
-    end.concat((1..grid.first.size-4).map do |j|
-      (0..grid.size-j-1).map { |i| grid[i][j+i] }
+      (0..grid.size-1-i).map do |j| 
+        #require 'pry';binding.pry
+        grid[i+j].tokens[j] 
+      end
+    end.concat((1..grid.first.tokens.size-2).map do |j|
+      (0..grid.size-j-1).map do |i|
+         grid[i].tokens[j+i] 
+      end
     end)
   end
 
+  def diagonals_no_tokens(grid)
+    (0..grid.size-4).map do |i|
+      (0..grid.size-1-i).map do |j| 
+        #require 'pry';binding.pry
+        grid[i+j][j] 
+      end
+    end.concat((1..grid.first.size-2).map do |j|
+      (0..grid.size-j-1).map do |i|
+         grid[i][j+i] 
+      end
+    end)
+  end
+
+  def rotate_board_90(grid)
+    ncols = grid.first.tokens.size
+    #require 'pry';binding.pry
+    grid.each_index.with_object([]) do |i,a|
+      a << ncols.times.map do |j|
+        # require 'pry';binding.pry
+         grid[j].tokens[ncols-1-i] 
+      end
+    end
+  end
+
+  def antediagonal_win?
+    @temp_array.clear
+    p @temp_array
+    p @columns
+    @temp_array = Marshal.load(Marshal.dump(@columns))
+    # require 'pry';binding.pry
+    @temp_array.each do |col|
+      p col.tokens
+      while col.tokens.count < 7 do
+        col.place_token(".")
+      end
+    end
+    rotated_array = rotate_board_90(@temp_array)
+    arr = diagonals_no_tokens(rotated_array)
+    four_in_a_row_by_row(arr)
+  end
+
   def diagonal_win?
-    puts diagonals(@columns)
+    @temp_array.clear
+    p @temp_array
+    @temp_array = Marshal.load(Marshal.dump(@columns))
+    # require 'pry';binding.pry
+    @temp_array.each do |col|
+      p col.tokens
+      while col.tokens.count < 6 do
+        col.place_token(".")
+      end
+    end
+    arr = diagonals(@temp_array)
+    four_in_a_row_by_row(arr)
+  end
+
+  def four_in_a_row_by_row(arr)
+    arr.each do |row|
+      a = row.each_cons(4).find do |a|
+         a.uniq.size == 1 && a.first != '.' 
+      end
+      return true unless a.nil?        
+    end
+    false
   end
 end
 
