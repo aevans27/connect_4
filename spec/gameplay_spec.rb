@@ -45,6 +45,12 @@ RSpec.describe Gameplay do
     end
   end
 
+  describe "#name and players" do
+    it "add additional player and names"
+
+    end
+  end
+
   # describe "#generate_board" do
   #   it "generates the board" do
   #     expect(@board.columns).to eq([@a, @b, @c, @d, @e, @f, @g])
