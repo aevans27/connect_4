@@ -59,16 +59,22 @@ class Gameplay
   end
 
   def add_player1_name
-    if @player2.is_computer
-      p "Please enter a name for the player, keep it clean please"
-      input = gets.chomp.downcase
-      @player1.add_name(input)
-      prep_and_play
-    else
-      p "Please enter a name for Player 1, keep it clean please"
-      input = gets.chomp.downcase
-      @player1.add_name(input)
-      add_player2_name
+    loop do
+      if @player2.is_computer
+        p "Please enter a name for the player, keep it clean please"
+        input = gets.chomp.downcase
+        if @player1.add_name?(input)
+          prep_and_play
+          break
+        end
+      else
+        p "Please enter a name for Player 1, keep it clean please"
+        input = gets.chomp.downcase
+        if @player1.add_name?(input)
+          add_player2_name
+          break
+        end
+      end
     end
   end
 
@@ -78,8 +84,7 @@ class Gameplay
       input = gets.chomp.downcase
       if input == @player1.name
         p "Please enter a name different than Player 1"
-      else
-        @player2.add_name(input)
+      elsif @player2.add_name?(input)
         prep_and_play
         break
       end

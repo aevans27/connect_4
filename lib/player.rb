@@ -11,8 +11,14 @@ class Player
     @is_computer
   end
 
-  def add_name(name)
-    @name = name
+  def add_name?(name)
+    if !name.empty?
+      @name = name
+      true
+    else
+      p "Please enter a valid name"
+      false
+    end
   end
 
 end
