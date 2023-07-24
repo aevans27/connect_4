@@ -18,4 +18,12 @@ RSpec.describe Player do
       expect(@player1.is_computer?).to be false
     end
   end
+
+  describe "#add_name" do
+    it "Add names to player" do
+      expect(@player1.name).to eq("No name")
+      @player1.add_name("Bob")
+      expect(@player1.name).to eq("Bob")
+    end
+  end
 end
