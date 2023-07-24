@@ -1,5 +1,6 @@
 class Player
   attr_reader :piece, :name
+  attr_accessor :is_computer
   def initialize(piece, is_computer)
     @piece = piece
     @is_computer = is_computer

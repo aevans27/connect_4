@@ -7,8 +7,7 @@ class Gameplay
     @player2 = Player.new("o", true)
     @board = Board.new
     @turn_counter = 0
-    @two_players = false
-    # @add_names = false
+    @did_start_game = false
   end
 
   def start_game
@@ -17,11 +16,11 @@ class Gameplay
       p "Enter p to play. Enter q to quit."
       input = gets.chomp.downcase
       if input == "p"
-        @turn_counter = 0
-        @board.columns.clear
-        @board.build_board
-        @board.update_board
-        play
+        if @did_start_game
+          prep_and_play
+        else
+          check_two_players
+        end
         break
       elsif input == "q"
         exit
@@ -31,48 +30,60 @@ class Gameplay
     end
   end
 
-  def two_players?
+  def check_two_players
     loop do
       p "Play with 2 players?"
       p "Enter y for yes. Enter n for single player."
       input = gets.chomp.downcase
       if input == "y"
-        @two_players = true
         @player2.is_computer = false
-        add_names?
+        add_player1_name
         break
       elsif input == "n"
-        exit
+        @player2.is_computer = true
+        add_player1_name
+        break
       else
         p "Please choose a vailid input."
       end
     end
   end
 
-  # def add_names?
-    
-  # end
+  def prep_and_play
+    @turn_counter = 0
+    @board.columns.clear
+    @board.build_board
+    @board.update_board
+    @did_start_game = true
+    play
+  end
 
   def add_player1_name
-    if @two_players
+    if @player2.is_computer
+      p "Please enter a name for the player, keep it clean please"
+      input = gets.chomp.downcase
+      @player1.add_name(input)
+      prep_and_play
+    else
       p "Please enter a name for Player 1, keep it clean please"
       input = gets.chomp.downcase
       @player1.add_name(input)
       add_player2_name
-      break
-    else
-      p "Please enter a name for the player, keep it clean please"
-      input = gets.chomp.downcase
-      @player1.add_name(input)
-      break
     end
   end
 
   def add_player2_name
-    p "Please enter a name for Player 2, keep it clean please"
-    input = gets.chomp.downcase
-    @player2.add_name(input)
-    break
+    loop do
+      p "Please enter a name for Player 2, keep it clean please"
+      input = gets.chomp.downcase
+      if input == @player1.name
+        p "Please enter a name different than Player 1"
+      else
+        @player2.add_name(input)
+        prep_and_play
+        break
+      end
+    end
   end
 
   def play
@@ -82,7 +93,7 @@ class Gameplay
         start_game
         break
       elsif @board.check_for_win?
-        p "#{@current_player} has won!"
+        p "#{@current_player.name} has won!"
         start_game
         break
       elsif @turn_counter < 42
