@@ -141,7 +141,7 @@ RSpec.describe Board do
   end
 
   describe "#horizontal_win_possible" do
-    it "can tell if a horizontal win is possible on this turn" do
+    it "can tell if a horizontal win is possible starting at column a on this turn" do
       @board.add_column(@a)
       @board.add_column(@b)
       @board.add_column(@c)
@@ -157,6 +157,130 @@ RSpec.describe Board do
       @c.place_token("X")
 
       expect(@board.horizontal_win_possible?).to be true
+    end
+
+    it "can tell if a horizontal win is possible ending at column g on this turn" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      @g.place_token("X")
+      @f.place_token("X")
+
+      expect(@board.horizontal_win_possible?).to be false
+
+      @e.place_token("X")
+
+      expect(@board.horizontal_win_possible?).to be true
+    end
+
+    it "can tell if a horizontal win is possible in middle columns on this turn" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      @b.place_token("X")
+      @c.place_token("X")
+
+      expect(@board.horizontal_win_possible?).to be false
+
+      @e.place_token("X")
+
+      expect(@board.horizontal_win_possible?).to be true
+    end
+  end
+
+  describe "#vertical_win_possible" do
+    it "can tell if a vertical win is possible on this turn" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      @a.place_token("X")
+      @a.place_token("X")
+
+      expect(@board.vertical_win_possible?).to be false
+
+      @a.place_token("X")
+
+      expect(@board.vertical_win_possible?).to be true
+
+      @a.place_token("O")
+
+      expect(@board.vertical_win_possible?).to be false
+    end
+  end
+
+  describe "#diagonal_win_possible" do
+    it "can tell if a diagonal win is possible" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      @a.place_token("X")
+      @b.place_token("X")
+      @b.place_token("X")
+      @c.place_token("X")
+      @c.place_token("X")
+      @d.place_token("X")
+      @d.place_token("X")
+      @d.place_token("X")
+      @e.place_token("O")
+      @e.place_token("O")
+      @e.place_token("O")
+      @e.place_token("O")
+      @e.place_token("O")
+      @e.place_token("O")
+
+      expect(@board.diagonal_win_possible?).to be false
+
+      @d.place_token("X")
+
+      expect(@board.diagonal_win_possible?).to be true
+    end
+  end
+
+  describe "#antediagonal_win_possible" do
+    it "can tell if an antediagonal win is possible" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      @b.place_token("X")
+      @b.place_token("X")
+      @b.place_token("X")
+      @c.place_token("X")
+      @c.place_token("X")
+      @d.place_token("X")
+      @d.place_token("X")
+      @e.place_token("X")
+      @a.place_token("O")
+      @a.place_token("O")
+      @a.place_token("O")
+      @a.place_token("O")
+      @a.place_token("O")
+      @a.place_token("O")
+
+      expect(@board.antediagonal_win_possible?).to be false
+
+      @c.place_token("X")
+
+      expect(@board.antediagonal_win_possible?).to be true
     end
   end
 end

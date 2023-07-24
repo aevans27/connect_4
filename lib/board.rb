@@ -205,7 +205,11 @@ class Board
         end
       end
 
-      if row_string.downcase.include?("xxx") || row_string.downcase.include?("ooo")
+      row_array = row_string.split(//)
+
+      if row_array.each_cons(4).find do |a|
+        a.uniq.count == 2 && a.count(".") == 1
+      end
         win_possible = true
         break
       end
@@ -213,5 +217,59 @@ class Board
       max_index -= 1
     end
     win_possible
+  end
+
+  def vertical_win_possible?
+    win_possible = false
+    @columns.find do |column|
+      if !column.tokens.empty?
+        if column.tokens.join.downcase.include?("xxx") || column.tokens.join.downcase.include?("ooo")
+          # require 'pry';binding.pry
+          win_possible = true unless column.tokens.join.downcase.include?("xxxo") || column.tokens.join.downcase.include?("ooox")
+          break
+        end
+      end
+    end
+    win_possible
+  end
+
+  def three_in_a_row_by_row(arr)
+    arr.each do |row|
+      a = row.each_cons(4).find do |a|
+        a.uniq.size == 2 && a.count(".") == 1
+      end
+      return true unless a.nil?  
+    end
+    false
+  end
+
+  def diagonal_win_possible?
+    @temp_array.clear
+    # p @temp_array
+    @temp_array = Marshal.load(Marshal.dump(@columns))
+    @temp_array.each do |col|
+      # p col.tokens
+      while col.tokens.count < 6 do
+        col.place_token(".")
+      end
+    end
+    arr = diagonals(@temp_array)
+    three_in_a_row_by_row(arr)
+  end
+
+  def antediagonal_win_possible?
+    @temp_array.clear
+    # p @temp_array
+    # p @columns
+    @temp_array = Marshal.load(Marshal.dump(@columns))
+    @temp_array.each do |col|
+      # p col.tokens
+      while col.tokens.count < 7 do
+        col.place_token(".")
+      end
+    end
+    rotated_array = rotate_board_90(@temp_array)
+    arr = diagonals_no_tokens(rotated_array)
+    three_in_a_row_by_row(arr)
   end
 end
