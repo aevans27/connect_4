@@ -187,4 +187,31 @@ class Board
     end
     false
   end
+
+  def horizontal_win_possible?
+    win_possible = false
+    max_index = 5
+    row_string = ""
+    while max_index >= 0 do
+      @columns.each do |column|
+        if column.tokens.empty?
+          row_string.concat(".")
+        else
+          if column.tokens[max_index] != nil
+            row_string.concat(column.tokens[max_index])
+          else
+            row_string.concat(".")
+          end
+        end
+      end
+
+      if row_string.downcase.include?("xxx") || row_string.downcase.include?("ooo")
+        win_possible = true
+        break
+      end
+      row_string = ""
+      max_index -= 1
+    end
+    win_possible
+  end
 end

@@ -7,6 +7,7 @@ class Gameplay
     @player2 = Player.new("o", true)
     @board = Board.new
     @turn_counter = 0
+    @current_player = @player1
   end
 
   def start_game

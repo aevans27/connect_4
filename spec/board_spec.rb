@@ -47,7 +47,6 @@ RSpec.describe Board do
 
       expect(@board.columns).to eq([@a, @b, @c, @d, @e, @f, @g])
 
-      @board.welcome
       @board.update_board
     end
   end
@@ -138,6 +137,26 @@ RSpec.describe Board do
       @b.place_token("X")
       expect(@board.antediagonal_win?).to eq(true)
       expect(@board.check_for_win?).to eq(true)
+    end
+  end
+
+  describe "#horizontal_win_possible" do
+    it "can tell if a horizontal win is possible on this turn" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      @a.place_token("X")
+      @b.place_token("X")
+
+      expect(@board.horizontal_win_possible?).to be false
+
+      @c.place_token("X")
+
+      expect(@board.horizontal_win_possible?).to be true
     end
   end
 end
