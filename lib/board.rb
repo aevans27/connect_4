@@ -50,7 +50,7 @@ class Board
   end
 
   def valid_placement?(input)
-    if "abcdefg".match?(input.downcase)
+    if "abcdefg".match?(input.downcase) && !input.empty?
       selected_index = @allow_letters.find_index(input.downcase)
       if @columns[selected_index].is_column_full?
         if !player.is_computer?
