@@ -13,6 +13,7 @@ class Gameplay
   def start_game
     loop do
       p "Welcome to CONNECT FOUR"
+      p "Player 1 is X. Player 2 is O."
       p "Enter p to play. Enter q to quit."
       input = gets.chomp.downcase
       if input == "p"
