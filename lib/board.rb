@@ -11,12 +11,6 @@ class Board
     @columns << column
   end
 
-  # def welcome
-  #   puts "Welcome to connect 4!
-  #   Player 1 is X and Player 2 is O
-  #   Player 1 goes first!"
-  # end
-
   def build_board
     add_column(@a = Column.new)
     add_column(@b = Column.new)
@@ -186,90 +180,5 @@ class Board
       return true unless a.nil?  
     end
     false
-  end
-
-  def horizontal_win_possible?
-    win_possible = false
-    max_index = 5
-    row_string = ""
-    while max_index >= 0 do
-      @columns.each do |column|
-        if column.tokens.empty?
-          row_string.concat(".")
-        else
-          if column.tokens[max_index] != nil
-            row_string.concat(column.tokens[max_index])
-          else
-            row_string.concat(".")
-          end
-        end
-      end
-
-      row_array = row_string.split(//)
-
-      if row_array.each_cons(4).find do |a|
-        a.uniq.count == 2 && a.count(".") == 1
-      end
-        win_possible = true
-        break
-      end
-      row_string = ""
-      max_index -= 1
-    end
-    win_possible
-  end
-
-  def vertical_win_possible?
-    win_possible = false
-    @columns.find do |column|
-      if !column.tokens.empty?
-        if column.tokens.join.downcase.include?("xxx") || column.tokens.join.downcase.include?("ooo")
-          # require 'pry';binding.pry
-          win_possible = true unless column.tokens.join.downcase.include?("xxxo") || column.tokens.join.downcase.include?("ooox")
-          break
-        end
-      end
-    end
-    win_possible
-  end
-
-  def three_in_a_row_by_row(arr)
-    arr.each do |row|
-      a = row.each_cons(4).find do |a|
-        a.uniq.size == 2 && a.count(".") == 1
-      end
-      return true unless a.nil?  
-    end
-    false
-  end
-
-  def diagonal_win_possible?
-    @temp_array.clear
-    # p @temp_array
-    @temp_array = Marshal.load(Marshal.dump(@columns))
-    @temp_array.each do |col|
-      # p col.tokens
-      while col.tokens.count < 6 do
-        col.place_token(".")
-      end
-    end
-    arr = diagonals(@temp_array)
-    three_in_a_row_by_row(arr)
-  end
-
-  def antediagonal_win_possible?
-    @temp_array.clear
-    # p @temp_array
-    # p @columns
-    @temp_array = Marshal.load(Marshal.dump(@columns))
-    @temp_array.each do |col|
-      # p col.tokens
-      while col.tokens.count < 7 do
-        col.place_token(".")
-      end
-    end
-    rotated_array = rotate_board_90(@temp_array)
-    arr = diagonals_no_tokens(rotated_array)
-    three_in_a_row_by_row(arr)
   end
 end

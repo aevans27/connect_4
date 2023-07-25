@@ -1,13 +1,12 @@
 class Gameplay
   attr_reader :player1, :player2, :board
-  attr_accessor :turn_counter, :current_player
+  attr_accessor :turn_counter, :current_player, :next_player, :column_index, :comp_input, :index_to_place
 
   def initialize
     @player1 = Player.new("x", false)
     @player2 = Player.new("o", true)
     @board = Board.new
     @turn_counter = 0
-    @current_player = @player1
     @did_start_game = false
   end
 
@@ -111,13 +110,15 @@ class Gameplay
   def turn
     if @turn_counter.odd?
       @current_player = @player2
+      @next_player = @player1
     else
       @current_player = @player1
+      @next_player = @player2
     end
     
     loop do
       if @current_player.is_computer?
-        input = @board.allow_letters.sample
+        input = smart_comp
       else
         p "Please select a column to place your piece."
         input = gets.chomp.downcase
@@ -132,5 +133,54 @@ class Gameplay
     end
 
     @turn_counter += 1
+  end
+
+  def smart_comp
+    if can_win?(@current_player)
+      @comp_input
+    elsif can_win?(@next_player)
+      @comp_input
+    else
+      @board.allow_letters.sample
+    end
+  end
+
+  def index_to_input(index)
+    if index == 0
+      "a"
+    elsif index == 1
+      "b"
+    elsif index == 2
+      "c"
+    elsif index == 3
+      "d"
+    elsif index == 4
+      "e"
+    elsif index == 5
+      "f"
+    elsif index == 6
+      "g"
+    end
+  end
+
+  def can_win?(player)
+    @board_dup = Marshal.load(Marshal.dump(@board))
+
+    @index_to_place = @board_dup.columns.find_index do |column|
+      column.place_token(player.piece) unless column.is_column_full?
+      if @board_dup.check_for_win?
+        true
+      else
+        column.tokens.pop
+        false
+      end
+    end
+
+    if !@index_to_place.nil?
+      @comp_input = index_to_input(@index_to_place)
+      true
+    else
+      false
+    end
   end
 end
