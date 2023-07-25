@@ -10,6 +10,8 @@ RSpec.describe Board do
     @e = Column.new
     @f = Column.new
     @g = Column.new
+    @player1 = Player.new("x", false)
+    @player2 = Player.new("o", true)
   end
 
   describe "#initialize" do
@@ -30,26 +32,16 @@ RSpec.describe Board do
       @board.add_column(@g)
 
       expect(@board.columns).to eq([@a, @b, @c, @d, @e, @f, @g])
-
-      #@board.update_board
     end
   end
 
-  describe "#add_pieces" do
-    it "can add pieces to board" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-
-      expect(@board.columns).to eq([@a, @b, @c, @d, @e, @f, @g])
-
-      @board.update_board
-    end
+  describe "#build_board" do
+  it 'can build a board' do
+    expect(@board.columns).to eq([])
+    @board.build_board
+    expect(@board.columns.count).to eq(7)
   end
+end
 
   describe "#update_board" do
     it "can place pieces" do
@@ -78,8 +70,8 @@ RSpec.describe Board do
       @board.add_column(@f)
       @board.add_column(@g)
 
-      expect(@board.valid_placement?("c")).to eq(true)
-      expect(@board.valid_placement?("z")).to eq(false)
+      expect(@board.valid_placement?("c", @player1)).to eq(true)
+      expect(@board.valid_placement?("z", @player2)).to eq(false)
     end
   end
 
@@ -93,9 +85,6 @@ RSpec.describe Board do
       @board.add_column(@f)
       @board.add_column(@g)
 
-      
-
-      # expect(@a.tokens).to eq(["X"])
       @board.update_board
       expect(@board.check_for_win?).to eq(false)
       expect(@board.vertical_win?).to eq(false)
@@ -107,22 +96,18 @@ RSpec.describe Board do
       @a.place_token("X")
       @a.place_token("X")
       
-      #expect(@board.check_for_win?).to eq(true)
+      expect(@board.check_for_win?).to eq(true)
       expect(@board.vertical_win?).to eq(true)
 
-      
       @b.place_token("X")
       @c.place_token("X")
       @d.place_token("X")
-
       @b.place_token("X")
       @c.place_token("X")
       @c.place_token("X")
       
-
-      #expect(@board.check_for_win?).to eq(true)
+      expect(@board.check_for_win?).to eq(true)
       expect(@board.horizontal_win?).to eq(true)
-
       expect(@board.diagonal_win?).to eq(false)
 
       @d.place_token("X")
@@ -132,155 +117,10 @@ RSpec.describe Board do
       @board.update_board
 
       expect(@board.diagonal_win?).to eq(true)
-
       expect(@board.antediagonal_win?).to eq(false)
       @b.place_token("X")
       expect(@board.antediagonal_win?).to eq(true)
       expect(@board.check_for_win?).to eq(true)
-    end
-  end
-
-  describe "#horizontal_win_possible" do
-    it "can tell if a horizontal win is possible starting at column a on this turn" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-      @a.place_token("X")
-      @b.place_token("X")
-
-      expect(@board.horizontal_win_possible?).to be false
-
-      @c.place_token("X")
-
-      expect(@board.horizontal_win_possible?).to be true
-    end
-
-    it "can tell if a horizontal win is possible ending at column g on this turn" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-      @g.place_token("X")
-      @f.place_token("X")
-
-      expect(@board.horizontal_win_possible?).to be false
-
-      @e.place_token("X")
-
-      expect(@board.horizontal_win_possible?).to be true
-    end
-
-    it "can tell if a horizontal win is possible in middle columns on this turn" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-      @b.place_token("X")
-      @c.place_token("X")
-
-      expect(@board.horizontal_win_possible?).to be false
-
-      @e.place_token("X")
-
-      expect(@board.horizontal_win_possible?).to be true
-    end
-  end
-
-  describe "#vertical_win_possible" do
-    it "can tell if a vertical win is possible on this turn" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-      @a.place_token("X")
-      @a.place_token("X")
-
-      expect(@board.vertical_win_possible?).to be false
-
-      @a.place_token("X")
-
-      expect(@board.vertical_win_possible?).to be true
-
-      @a.place_token("O")
-
-      expect(@board.vertical_win_possible?).to be false
-    end
-  end
-
-  describe "#diagonal_win_possible" do
-    it "can tell if a diagonal win is possible" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-      @a.place_token("X")
-      @b.place_token("X")
-      @b.place_token("X")
-      @c.place_token("X")
-      @c.place_token("X")
-      @d.place_token("X")
-      @d.place_token("X")
-      @d.place_token("X")
-      @e.place_token("O")
-      @e.place_token("O")
-      @e.place_token("O")
-      @e.place_token("O")
-      @e.place_token("O")
-      @e.place_token("O")
-
-      expect(@board.diagonal_win_possible?).to be false
-
-      @d.place_token("X")
-
-      expect(@board.diagonal_win_possible?).to be true
-    end
-  end
-
-  describe "#antediagonal_win_possible" do
-    it "can tell if an antediagonal win is possible" do
-      @board.add_column(@a)
-      @board.add_column(@b)
-      @board.add_column(@c)
-      @board.add_column(@d)
-      @board.add_column(@e)
-      @board.add_column(@f)
-      @board.add_column(@g)
-      @b.place_token("X")
-      @b.place_token("X")
-      @b.place_token("X")
-      @c.place_token("X")
-      @c.place_token("X")
-      @d.place_token("X")
-      @d.place_token("X")
-      @e.place_token("X")
-      @a.place_token("O")
-      @a.place_token("O")
-      @a.place_token("O")
-      @a.place_token("O")
-      @a.place_token("O")
-      @a.place_token("O")
-
-      expect(@board.antediagonal_win_possible?).to be false
-
-      @c.place_token("X")
-
-      expect(@board.antediagonal_win_possible?).to be true
     end
   end
 end

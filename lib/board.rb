@@ -43,8 +43,8 @@ class Board
     end
   end
 
-  def valid_placement?(input)
-    if "abcdefg".match?(input.downcase) && !input.empty?
+  def valid_placement?(input, player)
+    if allow_letters.include?(input.downcase) && !input.empty?
       selected_index = @allow_letters.find_index(input.downcase)
       if @columns[selected_index].is_column_full?
         if !player.is_computer?
@@ -73,7 +73,6 @@ class Board
     @columns.find do |column|
       if !column.tokens.empty?
         if column.tokens.join.downcase.include?("xxxx") || column.tokens.join.downcase.include?("oooo")
-          # require 'pry';binding.pry
           did_win = true
           break
         end
@@ -109,65 +108,57 @@ class Board
   end
 
   def diagonals(grid)
-    (0..grid.size-4).map do |i|
-      (0..grid.size-1-i).map do |j| 
-        #require 'pry';binding.pry
-        grid[i+j].tokens[j] 
+    (0..grid.size-4).map do |column|
+      (0..grid.size-1-column).map do |row| 
+        grid[column+row].tokens[row] 
       end
-    end.concat((1..grid.first.tokens.size-2).map do |j|
-      (0..grid.size-j-1).map do |i|
-        grid[i].tokens[j+i] 
+    end.concat((1..grid.first.tokens.size-2).map do |row|
+      (0..grid.size-row-1).map do |column|
+        grid[column].tokens[row+column] 
       end
     end)
   end
 
   def diagonals_no_tokens(grid)
-    (0..grid.size-4).map do |i|
-      (0..grid.size-1-i).map do |j|
-        grid[i+j][j]
+    (0..grid.size-4).map do |column|
+      (0..grid.size-1-column).map do |row|
+        grid[column+row][row]
       end
-    end.concat((1..grid.first.size-2).map do |j|
-      (0..grid.size-j-1).map do |i|
-        grid[i][j+i]
+    end.concat((1..grid.first.size-2).map do |row|
+      (0..grid.size-row-1).map do |column|
+        grid[column][row+column]
       end
     end)
   end
 
   def rotate_board_90(grid)
     ncols = grid.first.tokens.size
-    grid.each_index.with_object([]) do |i,a|
-      a << ncols.times.map do |j|
-        grid[j].tokens[ncols-1-i]
+    grid.each_index.with_object([]) do |column_index,column_array|
+      column_array << ncols.times.map do |row_index|
+        grid[row_index].tokens[ncols-1-column_index]
+      end
+    end
+  end
+
+  def diagonal_array
+    @temp_array.clear
+    @temp_array = Marshal.load(Marshal.dump(@columns))
+    @temp_array.each do |col|
+      while col.tokens.count < 6 do
+        col.place_token(".")
       end
     end
   end
 
   def antediagonal_win?
-    @temp_array.clear
-    # p @temp_array
-    # p @columns
-    @temp_array = Marshal.load(Marshal.dump(@columns))
-    @temp_array.each do |col|
-      # p col.tokens
-      while col.tokens.count < 7 do
-        col.place_token(".")
-      end
-    end
+    diagonal_array
     rotated_array = rotate_board_90(@temp_array)
     arr = diagonals_no_tokens(rotated_array)
     four_in_a_row_by_row(arr)
   end
 
   def diagonal_win?
-    @temp_array.clear
-    # p @temp_array
-    @temp_array = Marshal.load(Marshal.dump(@columns))
-    @temp_array.each do |col|
-      # p col.tokens
-      while col.tokens.count < 6 do
-        col.place_token(".")
-      end
-    end
+    diagonal_array
     arr = diagonals(@temp_array)
     four_in_a_row_by_row(arr)
   end
