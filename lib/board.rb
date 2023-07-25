@@ -11,12 +11,6 @@ class Board
     @columns << column
   end
 
-  # def welcome
-  #   puts "Welcome to connect 4!
-  #   Player 1 is X and Player 2 is O
-  #   Player 1 goes first!"
-  # end
-
   def build_board
     add_column(@a = Column.new)
     add_column(@b = Column.new)
