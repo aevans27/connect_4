@@ -8,6 +8,9 @@ class Player
   end
 
   def is_computer?
+    if @is_computer
+      @name = "Crow T Robot"
+    end
     @is_computer
   end
 

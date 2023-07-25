@@ -13,6 +13,7 @@ class Gameplay
   def start_game
     loop do
       p "Welcome to CONNECT FOUR"
+      p "Player 1 is X. Player 2 is O."
       p "Enter p to play. Enter q to quit."
       input = gets.chomp.downcase
       if input == "p"
@@ -95,11 +96,21 @@ class Gameplay
     loop do
       if @turn_counter == 42
         p "The game has ended in a draw."
-        start_game
+        replay
+        if @did_start_game
+          prep_and_play
+        else
+          check_two_players
+        end
         break
       elsif @board.check_for_win?
         p "#{@current_player.name} has won!"
-        start_game
+        replay
+        if @did_start_game
+          prep_and_play
+        else
+          check_two_players
+        end
         break
       elsif @turn_counter < 42
         turn
@@ -124,7 +135,7 @@ class Gameplay
         input = gets.chomp.downcase
       end
     
-      if @board.valid_placement?(input)
+      if @board.valid_placement?(input, @current_player)
         selected_index = @board.allow_letters.find_index(input.downcase)
         @board.columns[selected_index].place_token(@current_player.piece)
         @board.update_board
@@ -133,6 +144,32 @@ class Gameplay
     end
 
     @turn_counter += 1
+  end
+
+  def replay
+    p "Would you like to play again? P to play again, Q to quit."
+    loop do
+      input1 = gets.chomp.downcase
+      if input1 == "p"
+        p "Would you like a rematch or new players? R for rematch, N for new players."
+        loop do
+          input2 = gets.chomp.downcase
+          if input2 == "n"
+            @did_start_game = false
+            break
+          elsif input2 != "r"
+            p "Input is invalid. R for rematch, N for new players."
+          else
+            break
+          end
+        end
+        break
+      elsif input1 != "q"
+        p "Input is invalid. P to play again, Q to quit."
+      else
+        exit
+      end
+    end
   end
 
   def smart_comp
