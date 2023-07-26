@@ -1,6 +1,6 @@
 class Board
-  attr_reader :columns, :allow_letters
-  attr_accessor :temp_array
+  attr_reader :allow_letters
+  attr_accessor :temp_array, :columns
   def initialize
     @columns = []
     @allow_letters = ["a", "b", "c", "d", "e", "f", "g"]
@@ -110,7 +110,7 @@ class Board
   def diagonals(grid)
     (0..grid.size-4).map do |column|
       (0..grid.size-1-column).map do |row| 
-        grid[column+row].tokens[row] 
+        grid[column+row].tokens[row]
       end
     end.concat((1..grid.first.tokens.size-2).map do |row|
       (0..grid.size-row-1).map do |column|
