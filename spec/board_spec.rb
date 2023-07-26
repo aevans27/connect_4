@@ -123,4 +123,81 @@ end
       expect(@board.check_for_win?).to eq(true)
     end
   end
+
+  
+  describe "diagonals" do
+    it "can make return an array of diagonals" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      
+      expect(@board.diagonals(@board.columns)).to be_a Array
+    end
+  end
+  
+  describe "diagonals_no_tokens" do
+    it "can make return an array of diagonals" do
+      @grid = [["x", "x", "x", "x", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."]]
+      expect(@board.diagonals_no_tokens(@grid)).to be_a Array
+    end
+  end
+  
+  describe "rotate_board_90" do
+    it "can return a rotated array as an array" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+      
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      
+      expect(@board.rotate_board_90(@board.columns)).to be_a Array
+    end
+  end
+
+  describe "diagonal_array" do
+    it "can return a temporary array" do
+      @board.add_column(@a)
+      @board.add_column(@b)
+      @board.add_column(@c)
+      @board.add_column(@d)
+      @board.add_column(@e)
+      @board.add_column(@f)
+      @board.add_column(@g)
+  
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+      @a.place_token("X")
+  
+      expect(@board.diagonal_array).to eq(@board.temp_array)
+    end
+  end
+
+  describe "four_in_a_row_by_row" do
+    it "can tell if an array has four consecutive characters" do
+      @grid = [["x", "x", "x", "x", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."]]
+
+      expect(@board.four_in_a_row_by_row(@board.diagonals_no_tokens(@grid))).to be false
+
+      @grid2 = [["x", "x", "x", "x", ".", "."], [".", "x", ".", ".", ".", "."], [".", ".", "x", ".", ".", "."], [".", ".", ".", "x", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."], [".", ".", ".", ".", ".", "."]]
+
+      expect(@board.four_in_a_row_by_row(@board.diagonals_no_tokens(@grid2))).to be true
+    end
+  end
 end
